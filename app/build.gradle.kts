@@ -2,6 +2,9 @@ plugins {
     id("com.android.application")
 }
 
+val releaseStoreFile = System.getenv("SIGNING_STORE_FILE")
+val hasCiReleaseSigning = !releaseStoreFile.isNullOrBlank()
+
 android {
     namespace = "dev.codex.gmsunlock"
     compileSdk = 35
@@ -14,9 +17,29 @@ android {
         versionName = "1.0.0"
     }
 
+    signingConfigs {
+        create("ciRelease") {
+            if (hasCiReleaseSigning) {
+                storeFile = file(releaseStoreFile!!)
+                storePassword = System.getenv("SIGNING_STORE_PASSWORD")
+                keyAlias = System.getenv("SIGNING_KEY_ALIAS")
+                keyPassword = System.getenv("SIGNING_KEY_PASSWORD")
+            }
+        }
+    }
+
     buildTypes {
+        debug {
+            isDebuggable = true
+        }
         release {
+            isDebuggable = false
             isMinifyEnabled = false
+            signingConfig = if (hasCiReleaseSigning) {
+                signingConfigs.getByName("ciRelease")
+            } else {
+                signingConfigs.getByName("debug")
+            }
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
