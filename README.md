@@ -1,0 +1,61 @@
+# GMS Unlock LSPosed
+
+Standalone LSPosed/Xposed module extracted from the REAREye GMS unlock hook.
+
+This module removes two CN Google Play Services restriction feature flags from
+`com.android.server.SystemConfig`:
+
+- `cn.google.services`
+- `com.google.android.feature.services_updater`
+
+It is intentionally always-on after LSPosed activation. There is no extra
+settings switch.
+
+## Build
+
+Requirements:
+
+- JDK 17
+- Android SDK Platform 35
+- Android Gradle Plugin dependencies from Google Maven and Maven Central
+
+Build a debug APK:
+
+```powershell
+gradle :app:assembleDebug
+```
+
+The APK will be generated under:
+
+```text
+app/build/outputs/apk/debug/
+```
+
+GitHub Actions also builds the debug APK on every push, pull request, and
+manual `workflow_dispatch` run. Download the APK from the run artifact named
+`gms-unlock-debug-apk`.
+
+## Install
+
+1. Install the APK.
+2. Enable `GMS Unlock` in LSPosed.
+3. Keep the `android` scope selected.
+4. Reboot the device.
+
+If REAREye is also installed, do not enable REAREye's identical GMS unlock
+option at the same time unless you are intentionally testing duplicate hooks.
+
+## Source And License
+
+The hook was adapted from:
+
+https://github.com/killerprojecte/REAREye
+
+Original file:
+
+```text
+app/src/main/java/hk/uwu/reareye/hook/scopes/system/modules/misc/GMSUnlockModule.kt
+```
+
+REAREye is licensed under GPL-3.0, so this extracted module is distributed
+under GPL-3.0 as well. See `LICENSE` and `NOTICE`.
