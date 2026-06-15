@@ -11,6 +11,14 @@ This module removes two CN Google Play Services restriction feature flags from
 It is intentionally always-on after LSPosed activation. There is no extra
 settings switch.
 
+## Project Note
+
+This standalone module was assembled with the help of OpenAI Codex at the
+user's request. Thanks to `killerprojecte/REAREye` for the original GMS unlock
+implementation this module was extracted from.
+
+This project is not affiliated with or endorsed by REAREye.
+
 ## Build
 
 Requirements:
