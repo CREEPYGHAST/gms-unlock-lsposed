@@ -1,0 +1,17 @@
+GMS Unlock LSPosed contains a standalone adaptation of the GMS unlock
+hook from REAREye.
+
+Original project:
+https://github.com/killerprojecte/REAREye
+
+Original file:
+app/src/main/java/hk/uwu/reareye/hook/scopes/system/modules/misc/GMSUnlockModule.kt
+
+The adapted hook keeps the same behavior: remove these Android system
+feature flags from com.android.server.SystemConfig:
+
+- cn.google.services
+- com.google.android.feature.services_updater
+
+REAREye is licensed under GPL-3.0. This extracted module is distributed
+under the same license.
