@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
@@ -86,3 +86,36 @@ jobs:
           name: gms-unlock-release-apk
           path: app/build/outputs/apk/release/*.apk
           if-no-files-found: error
+
+      - name: Publish GitHub release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && startsWith(github.event.head_commit.message, 'Release ')
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG_NAME: v1.0.0
+        run: |
+          set -euo pipefail
+          release_apk="$(find app/build/outputs/apk/release -name '*.apk' | sort | head -n 1)"
+          debug_apk="$(find app/build/outputs/apk/debug -name '*.apk' | sort | head -n 1)"
+          release_asset="gms-unlock-lsposed-${TAG_NAME}-release.apk"
+          debug_asset="gms-unlock-lsposed-${TAG_NAME}-debug.apk"
+          notes_file="$RUNNER_TEMP/release-notes.md"
+
+          cp "$release_apk" "$release_asset"
+          cp "$debug_apk" "$debug_asset"
+
+          cat > "$notes_file" <<'NOTES'
+          Standalone LSPosed module for removing CN Google Play Services restriction feature flags from Android SystemConfig.
+
+          - Built by GitHub Actions.
+          - Includes debug and release APK assets.
+          - Release APK signature is verified by apksigner before upload.
+
+          If repository signing secrets are not configured, the release APK is signed with CI debug signing. It is installable, but configure release signing secrets for stable future updates.
+          NOTES
+
+          if gh release view "$TAG_NAME" >/dev/null 2>&1; then
+            gh release upload "$TAG_NAME" "$release_asset" "$debug_asset" --clobber
+            gh release edit "$TAG_NAME" --title "GMS Unlock LSPosed $TAG_NAME" --notes-file "$notes_file" --latest
+          else
+            gh release create "$TAG_NAME" "$release_asset" "$debug_asset" --title "GMS Unlock LSPosed $TAG_NAME" --notes-file "$notes_file" --target "$GITHUB_SHA" --latest
+          fi
