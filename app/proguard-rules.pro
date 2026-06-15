@@ -1,0 +1,2 @@
+-keep class dev.codex.gmsunlock.GmsUnlockHook { *; }
+-dontwarn de.robv.android.xposed.**
