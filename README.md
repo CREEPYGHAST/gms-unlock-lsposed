@@ -25,15 +25,34 @@ Build a debug APK:
 gradle :app:assembleDebug
 ```
 
-The APK will be generated under:
+Build a release APK:
+
+```powershell
+gradle :app:assembleRelease
+```
+
+The APKs will be generated under:
 
 ```text
 app/build/outputs/apk/debug/
+app/build/outputs/apk/release/
 ```
 
-GitHub Actions also builds the debug APK on every push, pull request, and
-manual `workflow_dispatch` run. Download the APK from the run artifact named
-`gms-unlock-debug-apk`.
+GitHub Actions builds both debug and release APKs on every push, pull request,
+and manual `workflow_dispatch` run. Download the APKs from these artifacts:
+
+- `gms-unlock-debug-apk`
+- `gms-unlock-release-apk`
+
+Release builds are signed. If no signing secrets are configured, CI falls back
+to Android's debug signing config so the release APK is still installable but
+not stable for future updates. For stable release updates, add these repository
+secrets and rerun the workflow:
+
+- `RELEASE_KEYSTORE_BASE64`
+- `RELEASE_KEYSTORE_PASSWORD`
+- `RELEASE_KEY_ALIAS`
+- `RELEASE_KEY_PASSWORD`
 
 ## Install
 
