@@ -35,9 +35,9 @@ public final class GmsUnlockHook implements IXposedHookLoadPackage {
             });
 
             hookAvailableFeatures(systemConfigClass);
-            log("installed for process " + lpparam.processName);
+            debugLog("installed for process " + lpparam.processName);
         } catch (Throwable throwable) {
-            log("failed to install hook", throwable);
+            errorLog("failed to install hook", throwable);
         }
     }
 
@@ -53,7 +53,7 @@ public final class GmsUnlockHook implements IXposedHookLoadPackage {
                     if (unhookRef[0] != null) {
                         unhookRef[0].unhook();
                         unhookRef[0] = null;
-                        log("removed one-shot getAvailableFeatures hook");
+                        debugLog("removed one-shot getAvailableFeatures hook");
                     }
                 }
             }
@@ -67,20 +67,22 @@ public final class GmsUnlockHook implements IXposedHookLoadPackage {
                 XposedHelpers.callMethod(systemConfig, "removeFeature", feature);
                 removedAny = true;
             } catch (Throwable throwable) {
-                log("failed to remove feature " + feature, throwable);
+                errorLog("failed to remove feature " + feature, throwable);
             }
         }
 
         if (removedAny) {
-            log("removed CN GMS restriction features via " + source);
+            debugLog("removed CN GMS restriction features via " + source);
         }
     }
 
-    private static void log(String message) {
-        XposedBridge.log(TAG + ": " + message);
+    private static void debugLog(String message) {
+        if (BuildConfig.DEBUG) {
+            XposedBridge.log(TAG + ": " + message);
+        }
     }
 
-    private static void log(String message, Throwable throwable) {
+    private static void errorLog(String message, Throwable throwable) {
         XposedBridge.log(TAG + ": " + message);
         XposedBridge.log(throwable);
     }
