@@ -17,6 +17,10 @@ android {
         versionName = "1.0.0"
     }
 
+    buildFeatures {
+        buildConfig = true
+    }
+
     signingConfigs {
         create("ciRelease") {
             if (hasCiReleaseSigning) {
