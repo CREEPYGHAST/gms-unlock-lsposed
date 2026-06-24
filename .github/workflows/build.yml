@@ -91,7 +91,7 @@ jobs:
         if: github.event_name == 'push' && github.ref == 'refs/heads/main' && startsWith(github.event.head_commit.message, 'Release ')
         env:
           GH_TOKEN: ${{ github.token }}
-          TAG_NAME: v1.0.0
+          TAG_NAME: v1.0.1
         run: |
           set -euo pipefail
           release_apk="$(find app/build/outputs/apk/release -name '*.apk' | sort | head -n 1)"
@@ -106,6 +106,7 @@ jobs:
           cat > "$notes_file" <<'NOTES'
           Standalone LSPosed module for removing CN Google Play Services restriction feature flags from Android SystemConfig.
 
+          - Tracks the upstream REAREye issue #3 fix by re-removing features before the first getAvailableFeatures() read.
           - Built by GitHub Actions.
           - Includes debug and release APK assets.
           - Release APK signature is verified by apksigner before upload.
