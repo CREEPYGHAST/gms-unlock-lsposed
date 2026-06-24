@@ -11,6 +11,13 @@ This module removes two CN Google Play Services restriction feature flags from
 It is intentionally always-on after LSPosed activation. There is no extra
 settings switch.
 
+## Upstream Sync
+
+Version `1.0.1` follows the upstream REAREye fix discussed in
+[killerprojecte/REAREye#3](https://github.com/killerprojecte/REAREye/issues/3):
+features are removed after `SystemConfig` construction and again before the
+first `getAvailableFeatures()` read, then that one-shot hook is removed.
+
 ## Project Note
 
 This standalone module was assembled with the help of OpenAI Codex at the
